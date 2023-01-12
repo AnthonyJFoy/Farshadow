@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farshadow</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <!-- <img src="/images/Far.png" style="width: 50%; height: 20%"> -->
+        </div>
+
+        <div class="game-area">
+            <div class="move-choice-area">
+                <button id="enter-room" type="button">Enter Room</button>
+                Move Chosen: <p class="move-chosen"></p>
+            </div>
+
+            <div class="dice-roll-area">
+                <p id="roll-result">Dice Roll:</p>
+                <img class="diceImg" src="/images/dice-0.png">
+            </div>
+            <div class="flex-area-character">
+                <div class="character-details-area">
+                    Battle Level: <p id="battle-level"></p>
+                    Sword: <p id="sword"></p>
+                    Shield: <p id="shield"></p>
+                    Armour: <p id="armour"></p>
+                </div>
+
+                <div class="battle-stats">
+                    Current Room Level: <p id="current-room-level"></p>
+                    Battles Won: <p id="battles-won"></p>
+                    Battles Lost: <p id="battles-lost"></p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+<script src="app.js"></script>
+</body>
+</html>

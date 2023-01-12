@@ -1,0 +1,70 @@
+html {
+    height: 100%;
+}
+
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: 'DotGothic16', sans-serif;
+}
+
+.container {
+    background-color: black;
+    height: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-image: url("/images/michal-matlon-2IypI0KKsS8-unsplash.jpg")
+
+}
+
+.game-area {
+
+
+}
+.move-choice-area {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 120px;
+}
+
+.img-dice {
+
+}
+
+#start-game {
+    flex-direction: row;
+    justify-content: center;
+    margin-left: 200px;
+    margin-right: 200px;
+}
+
+.dice-roll-area {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-left: 400px;
+    margin-right: 400px;
+    padding: 40px;
+    border: 2px solid white;
+    color: white;
+    
+}
+
+.flex-area-character {
+    display: flex;
+    justify-content: space-between;
+}
+
+.character-details-area {
+    padding: 40px;
+    color: white;
+}
+
+.battle-stats {
+    padding: 40px;
+    color: white;
+}
+

@@ -28,6 +28,7 @@ body {
     flex-direction: column;
     justify-content: center;
     padding: 120px;
+    color: white;
 }
 
 .img-dice {

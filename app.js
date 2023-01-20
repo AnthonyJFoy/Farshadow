@@ -1,11 +1,10 @@
 // Assign let variables for game values to change
-let battleLevel = 1;
+let battleLevel = 9;
+let combatLevel = 0;
+let itemsOwned = [];
 let roomLevel = 0;
 let battlesWon = 0;
 let battlesLost = 0;
-let swordLevel = 0;
-let armourLevel = 0;
-let shieldLevel = 0;
 let monsterLevel = 0;
 
 // Assign various html elements to constants
@@ -16,9 +15,10 @@ const fightMonsterButton = document.getElementById("fight-monster");
 const runAwayButton = document.getElementById("run-away");
 
 const battleLevelDisplay = document.getElementById("battle-level")
-const swordLevelDisplay = document.getElementById("sword")
-const shieldLevelDisplay = document.getElementById("shield")
-const armourLevelDisplay = document.getElementById("armour")
+const combatLevelDisplay = document.getElementById("combat-level")
+const itemsOwnedDisplay = document.getElementById("items-owned")
+
+
 const currentRoomLevelDisplay = document.getElementById("current-room-level")
 const battlesWonDisplay = document.getElementById("battles-won")
 const battlesLostDisplay = document.getElementById("battles-lost")
@@ -85,9 +85,9 @@ updateStats();
 function updateStats() {
 // Assign numbers to character stats
 battleLevelDisplay.innerHTML = battleLevel;
-swordLevelDisplay.innerHTML = swordLevel;
-shieldLevelDisplay.innerHTML = shieldLevel;
-armourLevelDisplay.innerHTML = armourLevel;
+combatLevelDisplay.innerHTML = combatLevel;
+itemsOwnedDisplay.innerHTML = itemsOwned;
+
 
 // Assign numbers to battle-stats
 currentRoomLevelDisplay.innerHTML = roomLevel;
@@ -106,6 +106,20 @@ function enterRoom() {
     if (roomResultString.includes("clear")) {
         // console.log("clear");
         lootRoom();
+        itemGained = lootChosen.weaponName;
+        console.log(itemGained); // test itemGained
+        itemLevel = lootChosen.weaponLevel;
+        console.log(itemLevel); // test itemLevel
+        if (itemGained.includes("Sword")) {
+            swordLevel = itemLevel;
+            updateStats()
+        } else if (itemGained.includes("Shield")) {
+            shieldLevel = itemLevel;
+            updateStats()
+        } else if (itemGained.includes("Armour")) {
+            armourLevel = itemLevel;
+            updateStats()
+        }
     } else {
         // console.log("monster");
         var monsterToFace = monsterGenerator()
@@ -159,9 +173,9 @@ function fightMonster() {
     if (battleLevel >= monsterLevel) {
         // Prompt player of win
         console.log("Won fight");
-        battleLevel = battleLevel ++;
-        roomLevel = roomLevel ++;
-        battlesWon = battlesWon ++;
+        battleLevel ++;
+        roomLevel ++;
+        battlesWon ++;
         updateStats();
         // console.log(battleLevel);
     } else if (battleLevel < monsterLevel) {
@@ -190,4 +204,8 @@ function rollDice() {
     console.log(randomNumber); // test dice roll
     document.querySelector(".diceImg").setAttribute("src", "./images/" + "dice-" + randomNumber + ".png"); // take dice image from diceRoll area, create new image from randomNumber and dice image and assign new image to diceRoll area.
     return randomNumber;
+}
+
+function nextRoom() {
+
 }

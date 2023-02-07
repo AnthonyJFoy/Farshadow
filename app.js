@@ -11,8 +11,12 @@ let monsterLevel = 0;
 const showRoomResult = document.getElementById("room-result-display");
 const showMonsterName = document.getElementById("monster-name-display");
 const showMonsterLevel = document.getElementById("monster-level-display");
+
+const enterRoomButton = document.getElementById("enter-room")
 const fightMonsterButton = document.getElementById("fight-monster");
 const runAwayButton = document.getElementById("run-away");
+const lootRoomButton = document.getElementById("loot-room");
+const nextRoomButton = document.getElementById("next-room");
 
 const battleLevelDisplay = document.getElementById("battle-level")
 const combatLevelDisplay = document.getElementById("combat-level")
@@ -24,12 +28,18 @@ const battlesWonDisplay = document.getElementById("battles-won")
 const battlesLostDisplay = document.getElementById("battles-lost")
 
 //Assign buttons to functions
+
+enterRoomButton.addEventListener("click", enterRoom);
 fightMonsterButton.addEventListener("click", fightMonster);
 runAwayButton.addEventListener("click", runAway);
+lootRoomButton.addEventListener("click", lootRoom);
+nextRoomButton.addEventListener("click", nextRoom);
 
-// hide fight and run away buttons until needed
+// hide fight, loot, next room and run away buttons until needed
 fightMonsterButton.style.display = "none";
 runAwayButton.style.display = "none";
+lootRoomButton.style.display = "none";
+nextRoomButton.style.display = "none";
 
 // Assign variables to used in multiple functions
 let roomResultString = "";
@@ -82,6 +92,7 @@ const lootArray = [
 
 updateStats();
 
+// Update all stats on screen with those held in variables
 function updateStats() {
 // Assign numbers to character stats
 battleLevelDisplay.innerHTML = battleLevel;
@@ -95,31 +106,17 @@ battlesWonDisplay.innerHTML = battlesWon;
 battlesLostDisplay.innerHTML = battlesLost;
 }
 
-// Apply enterRoom function to Enter Room button
-enterRoomButton = document.getElementById("enter-room")
-enterRoomButton.addEventListener("click", enterRoom);
 
 function enterRoom() {
-    // hide Enter Room button when clicked
+    // hide Enter Room button and next room button when clicked
     enterRoomButton.style.display = "none";
+    nextRoomButton.style.display = "none";
     randomRoomGenerator();
     if (roomResultString.includes("clear")) {
         // console.log("clear");
-        lootRoom();
-        itemGained = lootChosen.weaponName;
-        console.log(itemGained); // test itemGained
-        itemLevel = lootChosen.weaponLevel;
-        console.log(itemLevel); // test itemLevel
-        if (itemGained.includes("Sword")) {
-            swordLevel = itemLevel;
-            updateStats()
-        } else if (itemGained.includes("Shield")) {
-            shieldLevel = itemLevel;
-            updateStats()
-        } else if (itemGained.includes("Armour")) {
-            armourLevel = itemLevel;
-            updateStats()
-        }
+        // lootRoom();
+        // show lootRoomButton to enable the room to be looted
+        lootRoomButton.style.display = "block";
     } else {
         // console.log("monster");
         var monsterToFace = monsterGenerator()
@@ -159,10 +156,22 @@ function monsterGenerator() {
 
 // Choose random loot from lootArray and return
 function lootRoom() {
+    // remove lootRoomButton 
+    lootRoomButton.style.display = 'none';
     const randomLoot = Math.floor(Math.random() * lootArray.length)
     lootChosen = lootArray[randomLoot];
     // console.log(lootChosen); // test return value
-    return lootChosen;
+    itemGained = lootChosen.weaponName;
+    console.log(itemGained); // test itemGained
+    itemLevel = lootChosen.weaponLevel;
+    console.log(itemLevel); // test itemLevel
+    combatLevel = combatLevel + itemLevel;
+    // push item gained onto items owned array
+    itemsOwned.push(itemGained);
+    // update on screen stats to show new combat level and items owned.
+    updateStats();
+    // show next room button
+    nextRoomButton.style.display = "block";
 }
 
 function fightMonster() {
@@ -190,12 +199,12 @@ function fightMonster() {
 }
 
 function runAway() {
-    diceRoll = rollDice();
-    if (diceRoll >= 3) {
-        // successful escape
-    } else {
-        // failed escape
-    }
+    rollDice();
+    // if (diceRoll >= 3) {
+    //     // successful escape
+    // } else {
+    //     // failed escape
+    // }
 }
 
 //dice roll function numbers 1-6 and assign image to web page
@@ -207,5 +216,5 @@ function rollDice() {
 }
 
 function nextRoom() {
-
+    enterRoom();
 }

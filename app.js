@@ -1,7 +1,7 @@
 // Assign let variables for game values to change
 let battleLevel = 9;
 let combatLevel = 0;
-let itemsOwned = [];
+let itemsOwnedArray = [];
 let roomLevel = 0;
 let battlesWon = 0;
 let battlesLost = 0;
@@ -11,17 +11,18 @@ let monsterLevel = 0;
 const showRoomResult = document.getElementById("room-result-display");
 const showMonsterName = document.getElementById("monster-name-display");
 const showMonsterLevel = document.getElementById("monster-level-display");
+const showGameStatus = document.getElementById("status-display");
 
 const enterRoomButton = document.getElementById("enter-room")
 const fightMonsterButton = document.getElementById("fight-monster");
 const runAwayButton = document.getElementById("run-away");
 const lootRoomButton = document.getElementById("loot-room");
 const nextRoomButton = document.getElementById("next-room");
+const respawnButton = document.getElementById("respawn");
 
 const battleLevelDisplay = document.getElementById("battle-level")
 const combatLevelDisplay = document.getElementById("combat-level")
 const itemsOwnedDisplay = document.getElementById("items-owned")
-
 
 const currentRoomLevelDisplay = document.getElementById("current-room-level")
 const battlesWonDisplay = document.getElementById("battles-won")
@@ -34,12 +35,14 @@ fightMonsterButton.addEventListener("click", fightMonster);
 runAwayButton.addEventListener("click", runAway);
 lootRoomButton.addEventListener("click", lootRoom);
 nextRoomButton.addEventListener("click", nextRoom);
+respawnButton.addEventListener("click", respawn);
 
-// hide fight, loot, next room and run away buttons until needed
+// hide all buttons until needed
 fightMonsterButton.style.display = "none";
 runAwayButton.style.display = "none";
 lootRoomButton.style.display = "none";
 nextRoomButton.style.display = "none";
+respawnButton.style.display = "none";
 
 // Assign variables to used in multiple functions
 let roomResultString = "";
@@ -97,8 +100,7 @@ function updateStats() {
 // Assign numbers to character stats
 battleLevelDisplay.innerHTML = battleLevel;
 combatLevelDisplay.innerHTML = combatLevel;
-itemsOwnedDisplay.innerHTML = itemsOwned;
-
+itemsOwnedDisplay.innerHTML = itemsOwnedArray;
 
 // Assign numbers to battle-stats
 currentRoomLevelDisplay.innerHTML = roomLevel;
@@ -111,19 +113,15 @@ function enterRoom() {
     // hide Enter Room button and next room button when clicked
     enterRoomButton.style.display = "none";
     nextRoomButton.style.display = "none";
+    respawnButton.style.display = "none";
     randomRoomGenerator();
     if (roomResultString.includes("clear")) {
-        // console.log("clear");
-        // lootRoom();
-        // show lootRoomButton to enable the room to be looted
         lootRoomButton.style.display = "block";
     } else {
-        // console.log("monster");
         var monsterToFace = monsterGenerator()
         monsterLevel = monsterToFace.monsterLevel;
-        // console.log(typeof monsterLevel);
-        showMonsterName.innerHTML = (monsterToFace.monsterName);
-        showMonsterLevel.innerHTML = (monsterToFace.monsterLevel);
+        showMonsterName.innerHTML = "Monster: " + (monsterToFace.monsterName);
+        showMonsterLevel.innerHTML = "Level: " + (monsterToFace.monsterLevel);
         // Show fight and run buttons
         fightMonsterButton.style.display = "block";
         runAwayButton.style.display = "block";
@@ -134,23 +132,21 @@ function enterRoom() {
 function randomRoomGenerator() {
     var roomNumber = Math.floor((Math.random() * 2) + 1);
     if (roomNumber == 1) {
-        roomResultString = "The room is clear, there are no monsters"
+        roomResultString = "The room is clear, there are no monsters! You may loot the room."
         // show string on page
         showRoomResult.innerHTML = roomResultString;
     } else {
-        roomResultString = "A monster waits in the room"
+        roomResultString = "A monster waits in the room! You can choose to fight or to run."
         showRoomResult.innerHTML = roomResultString;
     }
-    // console.log(roomResultString); // testing roomResultString
     return roomResultString;
 }
 
 // Choose random monster from monsterArray and return
 function monsterGenerator() {
     const randomMonster = Math.floor(Math.random() * monsterArray.length);
-    // console.log(monsterChosen, monsterArray[monsterChosen]);
     monsterChosen = monsterArray[randomMonster];
-    // console.log(monsterChosen); // test return value
+    // return the monster from the array
     return monsterChosen;
 }
 
@@ -158,6 +154,9 @@ function monsterGenerator() {
 function lootRoom() {
     // remove lootRoomButton 
     lootRoomButton.style.display = 'none';
+    showRoomResult.innerHTML = "";
+    showMonsterLevel.innerHTML = "";
+    showMonsterName.innerHTML = "";
     const randomLoot = Math.floor(Math.random() * lootArray.length)
     lootChosen = lootArray[randomLoot];
     // console.log(lootChosen); // test return value
@@ -167,9 +166,10 @@ function lootRoom() {
     console.log(itemLevel); // test itemLevel
     combatLevel = combatLevel + itemLevel;
     // push item gained onto items owned array
-    itemsOwned.push(itemGained);
+    itemsOwnedArray.push(itemGained);
     // update on screen stats to show new combat level and items owned.
     updateStats();
+    showGameStatus.innerHTML = "You have found a " + itemGained + "! It is worth " + itemLevel + " combat levels. Your combat level is now " + combatLevel;
     // show next room button
     nextRoomButton.style.display = "block";
 }
@@ -177,34 +177,39 @@ function lootRoom() {
 function fightMonster() {
     fightMonsterButton.style.display = "none";
     runAwayButton.style.display = "none";
-    console.log(battleLevel);
-    console.log(monsterLevel);
+    showMonsterLevel.innerHTML = "";
+    showMonsterName.innerHTML = "";
     if (battleLevel >= monsterLevel) {
-        // Prompt player of win
-        console.log("Won fight");
+        showRoomResult.innerHTML = "";
+        showGameStatus.innerHTML = "You are stronger than the monster and the fight is won! You may loot the room.";
         battleLevel ++;
         roomLevel ++;
         battlesWon ++;
         updateStats();
-        // console.log(battleLevel);
+        lootRoomButton.style.display = "block";
     } else if (battleLevel < monsterLevel) {
-        // decide loss scenario
-        console.log("failed fight")
-        battlesLost ++;
-        battleLevel --;
-        updateStats();
-        // console.log(battlesLost);
-        // console.log(battleLevel);
+        showGameStatus.innerHTML = "The fight is LOST! You were too weak.";
+        showRoomResult.innerHTML = "";
+        youAreDead();
     }
 }
 
 function runAway() {
-    rollDice();
-    // if (diceRoll >= 3) {
-    //     // successful escape
-    // } else {
-    //     // failed escape
-    // }
+    var diceNumber = rollDice();
+    fightMonsterButton.style.display = "none";
+    runAwayButton.style.display = "none";
+    showRoomResult.innerHTML = "";
+    showMonsterLevel.innerHTML = "";
+    showMonsterName.innerHTML = "";
+    if (diceNumber >= 3) {
+        // successful escape
+        showGameStatus.innerHTML = "You rolled a " + diceNumber + " and MANAGED to escape! Continue forward...";
+        nextRoomButton.style.display = "block";
+    } else {
+        // failed escape
+        showGameStatus.innerHTML = "You rolled a " + diceNumber + " and FAILED to escape! The monster kills you! You must respawn to continue...";
+        youAreDead();
+    }
 }
 
 //dice roll function numbers 1-6 and assign image to web page
@@ -216,5 +221,20 @@ function rollDice() {
 }
 
 function nextRoom() {
+    showGameStatus.innerHTML = "";
+    enterRoom();
+}
+
+function youAreDead() {
+    // lose battle and update stats
+    battlesLost ++;
+    // clear array to drop all items
+    itemsOwnedArray = [];
+    combatLevel = 0;
+    updateStats();
+    respawnButton.style.display = "block";
+}
+
+function respawn() {
     enterRoom();
 }

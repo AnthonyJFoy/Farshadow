@@ -1,5 +1,4 @@
 // Assign let variables for game values to change
-let battleLevel = 1;
 let combatLevel = 1;
 let itemsOwnedArray = [];
 let roomLevel = 1;
@@ -20,7 +19,6 @@ const lootRoomButton = document.getElementById("loot-room");
 const nextRoomButton = document.getElementById("next-room");
 const respawnButton = document.getElementById("respawn");
 
-const battleLevelDisplay = document.getElementById("battle-level")
 const combatLevelDisplay = document.getElementById("combat-level")
 const itemsOwnedDisplay = document.getElementById("items-owned")
 
@@ -29,7 +27,6 @@ const battlesWonDisplay = document.getElementById("battles-won")
 const battlesLostDisplay = document.getElementById("battles-lost")
 
 //Assign buttons to functions
-
 enterRoomButton.addEventListener("click", enterRoom);
 fightMonsterButton.addEventListener("click", fightMonster);
 runAwayButton.addEventListener("click", runAway);
@@ -47,29 +44,25 @@ respawnButton.style.display = "none";
 // Assign variables to used in multiple functions
 let roomResultString = "";
 
-
+// Run updateStats to show starting stats on screen.
 updateStats();
 
 // Update all stats on screen with those held in variables
 function updateStats() {
-// Assign numbers to character stats
-battleLevelDisplay.innerHTML = battleLevel;
 combatLevelDisplay.innerHTML = combatLevel;
 itemsOwnedDisplay.innerHTML = itemsOwnedArray;
-
-// Assign numbers to battle-stats
 currentRoomLevelDisplay.innerHTML = roomLevel;
 battlesWonDisplay.innerHTML = battlesWon;
 battlesLostDisplay.innerHTML = battlesLost;
 }
 
-
 function enterRoom() {
-    // hide Enter Room button and next room button when clicked
+    // hide appropriate html elements
     enterRoomButton.style.display = "none";
     nextRoomButton.style.display = "none";
     respawnButton.style.display = "none";
     showGameStatus.innerHTML = "";
+
     randomRoomGenerator();
     if (roomResultString.includes("clear")) {
         lootRoomButton.style.display = "block";
@@ -85,12 +78,12 @@ function enterRoom() {
 
 }
 
+// Chooses a random room and returns a string to HTML
 function randomRoomGenerator() {
     var roomNumber = Math.floor((Math.random() * 2) + 1);
     if (roomNumber == 1) {
         roomResultString = "The room is clear, there are no monsters! You may loot the room."
-        // show string on page
-        showRoomResult.innerHTML = roomResultString;
+        showRoomResult.innerHTML = roomResultString; // show string on page
     } else {
         roomResultString = "A monster waits in the room! You can choose to fight or to run."
         showRoomResult.innerHTML = roomResultString;
@@ -98,33 +91,35 @@ function randomRoomGenerator() {
     return roomResultString;
 }
 
-// Choose random monster from monsterArray and return
+// Choose random monster from monsterArray and return.
 function monsterGenerator() {
     const randomMonster = Math.floor(Math.random() * monsterArray.length);
     monsterChosen = monsterArray[randomMonster];
-    // return the monster from the array
     return monsterChosen;
 }
 
 // Choose random loot from lootArray and return
 function lootRoom() {
-    // remove lootRoomButton 
+    // Remove HTML elements from screen.
     lootRoomButton.style.display = 'none';
     showRoomResult.innerHTML = "";
     showMonsterLevel.innerHTML = "";
     showMonsterName.innerHTML = "";
+
     const randomLoot = Math.floor(Math.random() * lootArray.length)
     lootChosen = lootArray[randomLoot];
     itemGained = lootChosen.weaponName;
     itemLevel = lootChosen.weaponLevel;
-    combatLevel = combatLevel + itemLevel;
-    // push item gained onto items owned array
-    itemsOwnedArray.push(itemGained);
-    // update on screen stats to show new combat level and items owned.
-    updateStats();
-    showGameStatus.innerHTML = "You have found a " + itemGained + "! It is worth " + itemLevel + " combat levels. Your combat level is now " + combatLevel;
-    // show next room button
-    nextRoomButton.style.display = "block";
+
+    if (itemsOwnedArray.includes(itemGained)) { // Check for duplicates.
+        showGameStatus.innerHTML = "You have found a " + itemGained + "! You already have this item. You discard it and get ready to continue.";
+    } else {
+        combatLevel = combatLevel + itemLevel;
+        itemsOwnedArray.push(itemGained); // push item gained onto items owned array
+        updateStats();
+        showGameStatus.innerHTML = "You have found a " + itemGained + "! It is worth " + itemLevel + " combat levels. Your combat level is now " + combatLevel;
+    }
+    nextRoomButton.style.display = "block"; // show next room button
 }
 
 function fightMonster() {
@@ -132,14 +127,14 @@ function fightMonster() {
     runAwayButton.style.display = "none";
     showMonsterLevel.innerHTML = "";
     showMonsterName.innerHTML = "";
-    if (battleLevel >= monsterLevel) {
+    if (combatLevel >= monsterLevel) {
         showRoomResult.innerHTML = "";
         showGameStatus.innerHTML = "You are stronger than the monster and the fight is won! You may loot the room.";
-        battleLevel ++;
         roomLevel ++;
         battlesWon ++;
         updateStats();
         lootRoomButton.style.display = "block";
+        checkWinCondition();
     } else if (battleLevel < monsterLevel) {
         showGameStatus.innerHTML = "The fight is LOST! You were too weak.";
         showRoomResult.innerHTML = "";
@@ -178,16 +173,27 @@ function nextRoom() {
     enterRoom();
 }
 
+// lose battle, items and clear combat level
 function youAreDead() {
-    // lose battle and update stats
     battlesLost ++;
-    // clear array to drop all items
-    itemsOwnedArray = [];
-    combatLevel = 0;
+    itemsOwnedArray = []; // clear array to drop all items
+    combatLevel = 1;
     updateStats();
     respawnButton.style.display = "block";
 }
 
 function respawn() {
     enterRoom();
+}
+
+function checkWinCondition() {
+    if (roomLevel >= 10) {
+        showGameStatus.innerHTML = "You have reached room 10 of the adventure! You have completed your adventure!";
+        // Hide all buttons
+        fightMonsterButton.style.display = "none";
+        runAwayButton.style.display = "none";
+        lootRoomButton.style.display = "none";
+        nextRoomButton.style.display = "none";
+        respawnButton.style.display = "none";
+    }
 }

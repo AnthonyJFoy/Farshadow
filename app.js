@@ -1,8 +1,8 @@
 // Assign let variables for game values to change
-let battleLevel = 9;
-let combatLevel = 0;
+let battleLevel = 1;
+let combatLevel = 1;
 let itemsOwnedArray = [];
-let roomLevel = 0;
+let roomLevel = 1;
 let battlesWon = 0;
 let battlesLost = 0;
 let monsterLevel = 0;
@@ -47,51 +47,6 @@ respawnButton.style.display = "none";
 // Assign variables to used in multiple functions
 let roomResultString = "";
 
-// Array of monsters to fight
-const monsterArray = [
-    {
-        monsterName: "Liquid Snake",
-        monsterLevel: 5,
-    },
-    {
-        monsterName: "Revolver Ocelot",
-        monsterLevel: 4,
-    },
-    {
-        monsterName: "Sniper Wolf",
-        monsterLevel: 3,
-    },
-    {
-        monsterName: "Raven",
-        monsterLevel: 2,
-    },
-    {
-        monsterName: "Psycho Mantis",
-        monsterLevel: 1,
-    },
-    {
-        monsterName: "Grey Fox",
-        monsterLevel: 10,
-    },
-
-]
-
-// Array of loot items
-const lootArray = [
-    {
-        weaponName: "Sword",
-        weaponLevel: 5,
-    },
-    {
-        weaponName: "Shield",
-        weaponLevel: 3,
-    },
-    {
-        weaponName: "Armour",
-        weaponLevel: 2,
-    }
-    
-]
 
 updateStats();
 
@@ -114,6 +69,7 @@ function enterRoom() {
     enterRoomButton.style.display = "none";
     nextRoomButton.style.display = "none";
     respawnButton.style.display = "none";
+    showGameStatus.innerHTML = "";
     randomRoomGenerator();
     if (roomResultString.includes("clear")) {
         lootRoomButton.style.display = "block";
@@ -159,11 +115,8 @@ function lootRoom() {
     showMonsterName.innerHTML = "";
     const randomLoot = Math.floor(Math.random() * lootArray.length)
     lootChosen = lootArray[randomLoot];
-    // console.log(lootChosen); // test return value
     itemGained = lootChosen.weaponName;
-    console.log(itemGained); // test itemGained
     itemLevel = lootChosen.weaponLevel;
-    console.log(itemLevel); // test itemLevel
     combatLevel = combatLevel + itemLevel;
     // push item gained onto items owned array
     itemsOwnedArray.push(itemGained);

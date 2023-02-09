@@ -35,6 +35,11 @@ body {
 
 }
 
+.diceImg {
+    width: 150px;
+    height: 150px;
+}
+
 #start-game {
     flex-direction: row;
     justify-content: center;
@@ -49,7 +54,7 @@ body {
     margin-left: 400px;
     margin-right: 400px;
     padding: 40px;
-    border: 2px solid white;
+    /* border: 2px solid white; */
     color: white;
     
 }

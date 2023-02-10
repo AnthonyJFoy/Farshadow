@@ -62,11 +62,22 @@ function enterRoom() {
     nextRoomButton.style.display = "none";
     respawnButton.style.display = "none";
     showGameStatus.innerHTML = "";
-
     randomRoomGenerator();
-    if (roomResultString.includes("clear")) {
+}
+
+// Chooses a random room and returns a string to HTML
+function randomRoomGenerator() {
+    var roomNumber = Math.floor((Math.random() * 4) + 1);
+    if (roomNumber == 1) {
+        showRoomResult.innerHTML = "This room is clear from monsters. It's filled with old chests and boxes. You may safely loot the room."; // show string on page
         lootRoomButton.style.display = "block";
-    } else {
+    } 
+    else if (roomNumber == 1) {
+        showRoomResult.innerHTML= "This room contains skeletons and dried blood, remnants from an earlier battle. There is nothing of value here. You move on."
+        nextRoomButton.style.display = "block";
+    }
+    else if (roomNumber == 2){
+        showRoomResult.innerHTML = "You're met with a monster, its extremely hostile towards you! You can choose to either fight or attempt to run away!"
         var monsterToFace = monsterGenerator()
         monsterLevel = monsterToFace.monsterLevel;
         showMonsterName.innerHTML = "Monster: " + (monsterToFace.monsterName);
@@ -75,18 +86,20 @@ function enterRoom() {
         fightMonsterButton.style.display = "block";
         runAwayButton.style.display = "block";
     }
-
-}
-
-// Chooses a random room and returns a string to HTML
-function randomRoomGenerator() {
-    var roomNumber = Math.floor((Math.random() * 2) + 1);
-    if (roomNumber == 1) {
-        roomResultString = "The room is clear, there are no monsters! You may loot the room."
-        showRoomResult.innerHTML = roomResultString; // show string on page
-    } else {
-        roomResultString = "A monster waits in the room! You can choose to fight or to run."
-        showRoomResult.innerHTML = roomResultString;
+    else if (roomNumber == 3) {
+        showRoomResult.innerHTML = "A horde of Goblins ambush you! They attempt take one of your items."
+        nextRoomButton.style.display = "block";
+        goblinItemSteal();
+    }
+    else if (roomNumber == 4) {
+        showRoomResult.innerHTML = "The ground starts to rumble, you worry what you have just disturbed! This foe may be beyond you, good luck!";
+        var monsterToFace = monsterGeneratorBoss()
+        monsterLevel = monsterToFace.monsterLevel;
+        showMonsterName.innerHTML = "Monster: " + (monsterToFace.monsterName);
+        showMonsterLevel.innerHTML = "Level: " + (monsterToFace.monsterLevel);
+        // Show fight and run buttons
+        fightMonsterButton.style.display = "block";
+        runAwayButton.style.display = "block";
     }
     return roomResultString;
 }
@@ -95,6 +108,12 @@ function randomRoomGenerator() {
 function monsterGenerator() {
     const randomMonster = Math.floor(Math.random() * monsterArray.length);
     monsterChosen = monsterArray[randomMonster];
+    return monsterChosen;
+}
+
+function monsterGeneratorBoss() {
+    const randomMonster = Math.floor(Math.random() * bossMonsterArray.length);
+    monsterChosen = bossMonsterArray[randomMonster];
     return monsterChosen;
 }
 
@@ -117,7 +136,7 @@ function lootRoom() {
         combatLevel = combatLevel + itemLevel;
         itemsOwnedArray.push(itemGained); // push item gained onto items owned array
         updateStats();
-        showGameStatus.innerHTML = "You have found a " + itemGained + "! It is worth " + itemLevel + " combat levels. Your combat level is now " + combatLevel;
+        showGameStatus.innerHTML = "You have found a " + itemGained + "! It is worth " + itemLevel + " combat levels. Your combat level is now " + combatLevel + ".";
     }
     nextRoomButton.style.display = "block"; // show next room button
 }
@@ -129,14 +148,14 @@ function fightMonster() {
     showMonsterName.innerHTML = "";
     if (combatLevel >= monsterLevel) {
         showRoomResult.innerHTML = "";
-        showGameStatus.innerHTML = "You are stronger than the monster and the fight is won! You may loot the room.";
+        showGameStatus.innerHTML = "You battle the monster with all you have. You WIN the battle. You may now loot the monsters items and continue on.";
         roomLevel ++;
         battlesWon ++;
         updateStats();
         lootRoomButton.style.display = "block";
         checkWinCondition();
-    } else if (battleLevel < monsterLevel) {
-        showGameStatus.innerHTML = "The fight is LOST! You were too weak.";
+    } else if (combatLevel < monsterLevel) {
+        showGameStatus.innerHTML = "You battle the monster with all you have. You LOSE the battle. Your combat level was simply not high enough. You have died and you must respawn in the first room.";
         showRoomResult.innerHTML = "";
         youAreDead();
     }
@@ -188,7 +207,7 @@ function respawn() {
 
 function checkWinCondition() {
     if (roomLevel >= 10) {
-        showGameStatus.innerHTML = "You have reached room 10 of the adventure! You have completed your adventure!";
+        showGameStatus.innerHTML = "You have reached room 10 of the adventure! You have completed your mission! Well done, feel free to play again";
         // Hide all buttons
         fightMonsterButton.style.display = "none";
         runAwayButton.style.display = "none";
@@ -196,4 +215,21 @@ function checkWinCondition() {
         nextRoomButton.style.display = "none";
         respawnButton.style.display = "none";
     }
+}
+
+function goblinItemSteal() {
+    if (itemsOwnedArray.length >= 1) {
+        var randomIndexNum = Math.floor(Math.random() * itemsOwnedArray.length)
+        takenItem = itemsOwnedArray[randomIndexNum];
+        if (rollDice() >= 3) {
+            itemsOwnedArray.splice(randomIndexNum, 1);
+            showGameStatus.innerHTML = "The Goblins take your " + takenItem + " and flee whilst laughing!";
+            updateStats();
+        } else {
+            showGameStatus.innerHTML = "The Goblins try to take your " + takenItem + " but you manage to fight them off. They scurry away into the darkness.";
+        }
+    } else {
+        showGameStatus.innerHTML = "The Goblins see you have nothing of value and berate you for twenty minutes. They leave knowing they will encounter you again!";
+    }
+    
 }

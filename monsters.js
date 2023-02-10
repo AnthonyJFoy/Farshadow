@@ -76,9 +76,12 @@ const monsterArray = [
         monsterName: "Jody",
         monsterLevel: 19,
     },
+    
+]
+
+const bossMonsterArray = [
     {
         monsterName: "Dave the Bastard",
         monsterLevel: 20,
     },
-
 ]

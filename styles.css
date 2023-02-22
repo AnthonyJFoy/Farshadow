@@ -48,12 +48,12 @@ body {
 }
 
 .dice-roll-area {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    margin-left: 400px;
-    margin-right: 400px;
-    padding: 40px;
+    /* display: flex; */
+    /* flex-direction: column; */
+    /* justify-content: center; */
+    /* margin-left: 400px; */
+    /* margin-right: 400px; */
+    /* padding: 40px; */
     /* border: 2px solid white; */
     color: white;
     

@@ -49,3 +49,18 @@ const lootArray = [
         weaponLevel: 2,
     },
 ]
+
+const legendItems = [
+    {
+        weaponName: "",
+        weaponLevel: 5,
+    },
+    {
+        weaponName: "Shield",
+        weaponLevel: 5,
+    },
+    {
+        weaponName: "Right Arm Guard",
+        weaponLevel: 1,
+    },
+]
